@@ -29,6 +29,20 @@ chown -R www-data:www-data \
     "$app_dir/storage" \
     "$app_dir/public/uploads"
 
+if ! php -r '
+$key = getenv("APP_KEY") ?: "";
+$decoded = str_starts_with($key, "base64:")
+    ? base64_decode(substr($key, 7), true)
+    : $key;
+if (is_string($decoded) && strlen($decoded) === 32) {
+    exit(0);
+}
+exit(1);
+'; then
+    echo "APP_KEY tidak ada atau tidak valid. Isi APP_KEY dengan hasil php artisan key:generate --show di environment Vercel." >&2
+    exit 1
+fi
+
 su -s /bin/sh www-data -c "
     set -eu
     cd '$app_dir'

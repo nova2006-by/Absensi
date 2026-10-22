@@ -35,6 +35,7 @@ RUN apt-get update \
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 ENV PORT=80
+ENV VERCEL_CONTAINER=1
 WORKDIR /var/www/html
 
 COPY docker/apache-vercel.conf /etc/apache2/sites-available/000-default.conf

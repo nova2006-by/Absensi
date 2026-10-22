@@ -2,32 +2,41 @@
 set -eu
 
 port="${PORT:-10000}"
+app_dir="/var/www/html"
 
-sed -i "s/^Listen 80$/Listen ${port}/" /etc/apache2/ports.conf
-
-if [ "$port" != "10000" ]; then
-    sed -i "s/:10000>/:${port}>/" /etc/apache2/sites-available/000-default.conf
+if [ "${VERCEL_CONTAINER:-0}" = "1" ]; then
+    app_dir="/tmp/laravel-app"
+    mkdir -p "$app_dir"
+    cp -a /var/www/html/. "$app_dir/"
+    sed -i "s#/var/www/html#$app_dir#g" /etc/apache2/sites-available/000-default.conf
 fi
 
+sed -i "s/^Listen 80$/Listen ${port}/" /etc/apache2/ports.conf
+sed -i "s#<VirtualHost \\*:[0-9][0-9]*>#<VirtualHost *:${port}>#" \
+    /etc/apache2/sites-available/000-default.conf
+
 mkdir -p \
-    bootstrap/cache \
-    storage/app/private \
-    storage/framework/cache/data \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/logs \
-    public/uploads
+    "$app_dir/bootstrap/cache" \
+    "$app_dir/storage/app/private" \
+    "$app_dir/storage/framework/cache/data" \
+    "$app_dir/storage/framework/sessions" \
+    "$app_dir/storage/framework/views" \
+    "$app_dir/storage/logs" \
+    "$app_dir/public/uploads"
 
-chown -R www-data:www-data bootstrap/cache storage public/uploads
+chown -R www-data:www-data \
+    "$app_dir/bootstrap/cache" \
+    "$app_dir/storage" \
+    "$app_dir/public/uploads"
 
-su -s /bin/sh www-data -c '
+su -s /bin/sh www-data -c "
     set -eu
-    cd /var/www/html
+    cd '$app_dir'
     php artisan config:clear
     php artisan package:discover --ansi
     php artisan migrate --force
     php artisan config:cache
     php artisan view:cache
-'
+"
 
 exec apache2-foreground

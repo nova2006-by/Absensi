@@ -11,7 +11,8 @@ RUN composer install \
     --optimize-autoloader
 
 COPY . .
-RUN composer dump-autoload --no-dev --no-interaction --optimize
+RUN rm -f bootstrap/cache/*.php \
+    && composer dump-autoload --no-dev --no-interaction --optimize
 
 FROM node:22-alpine AS assets
 

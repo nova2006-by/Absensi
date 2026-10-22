@@ -11,7 +11,10 @@ RUN composer install \
     --optimize-autoloader
 
 COPY . .
-RUN composer dump-autoload --no-dev --no-interaction --optimize
+# Hapus manifest paket cache dari mesin lokal (merujuk paket dev yang tidak
+# di-install --no-dev) sebelum dump-autoload ulang.
+RUN rm -f bootstrap/cache/*.php \
+    && composer dump-autoload --no-dev --no-interaction --optimize
 
 FROM node:22-alpine AS assets
 

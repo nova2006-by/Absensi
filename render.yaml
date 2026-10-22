@@ -1,0 +1,73 @@
+services:
+  - type: web
+    name: absensi-sekolah-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: SMK NU Bandar
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        sync: false
+      - key: APP_TIMEZONE
+        value: Asia/Jakarta
+      - key: APP_LOCALE
+        value: id
+      - key: APP_FALLBACK_LOCALE
+        value: id
+      - key: APP_KEY
+        sync: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        sync: false
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_ENCRYPT
+        value: true
+      - key: SESSION_SECURE_COOKIE
+        value: true
+      - key: SESSION_HTTP_ONLY
+        value: true
+      - key: SESSION_SAME_SITE
+        value: lax
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: LOG_LEVEL
+        value: warning
+      - key: INSTALL_KEY
+        sync: false
+      - key: INITIAL_ADMIN_NAME
+        value: Administrator
+      - key: INITIAL_ADMIN_EMAIL
+        sync: false
+      - key: INITIAL_ADMIN_PASSWORD
+        sync: false
+      - key: ABSEN_LOKASI_LATITUDE
+        sync: false
+      - key: ABSEN_LOKASI_LONGITUDE
+        sync: false
+      - key: ABSEN_LOKASI_RADIUS
+        value: 100
+      - key: ABSEN_JAM_MASUK_MULAI
+        value: 06:30
+      - key: ABSEN_JAM_MASUK
+        value: 07:30
+      - key: ABSEN_JAM_MASUK_BATAS
+        value: 08:30
+      - key: ABSEN_JAM_PULANG_MULAI
+        value: 14:30
+      - key: ABSEN_JAM_PULANG_BATAS
+        value: 17:00
+      - key: MAIL_MAILER
+        value: log

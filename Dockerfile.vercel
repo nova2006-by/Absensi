@@ -11,10 +11,11 @@ RUN composer install \
     --optimize-autoloader
 
 COPY . .
-# Hapus manifest paket cache dari mesin lokal (merujuk paket dev yang tidak
-# di-install --no-dev) sebelum dump-autoload ulang.
+# Jangan jalankan script composer (package:discover) saat build: manifest paket
+# dev dari mesin lokal bisa bocor lewat context build dan gagalkan build --no-dev.
+# Entrypoint menjalankan package:discover saat container boot dengan vendor benar.
 RUN rm -f bootstrap/cache/*.php \
-    && composer dump-autoload --no-dev --no-interaction --optimize
+    && composer dump-autoload --no-dev --no-scripts --no-interaction --optimize
 
 FROM node:22-alpine AS assets
 

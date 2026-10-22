@@ -1,0 +1,19 @@
+# File yang tidak boleh ikut ter-upload ke context build container Vercel.
+# Daftar ini menggantikan .gitignore saat deploy via CLI, jadi eksplisit.
+.git
+.env
+.env.*
+!.env.example
+node_modules
+vendor
+bootstrap/cache
+storage/logs
+database/*.sqlite
+database/*.sqlite3
+database/*.db
+public/build
+public/hot
+public/uploads/*
+.phpunit.result.cache
+.phpactor.json
+auth.json

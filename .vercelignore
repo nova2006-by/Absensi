@@ -11,7 +11,6 @@ storage/logs
 database/*.sqlite
 database/*.sqlite3
 database/*.db
-public/build
 public/hot
 public/uploads/*
 .phpunit.result.cache

@@ -6,7 +6,7 @@
 !.env.example
 node_modules
 vendor
-bootstrap/cache
+bootstrap/cache/*.php
 storage/logs
 database/*.sqlite
 database/*.sqlite3

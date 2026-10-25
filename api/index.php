@@ -58,11 +58,22 @@ foreach (['framework/cache/data', 'framework/sessions', 'framework/views', 'logs
     }
 }
 
+// Hasil kompilasi view yang dibuat saat build ikut disalin ke /tmp, sehingga
+// cold start tidak perlu mengompilasi ulang seluruh template.
+$compiled = __DIR__ . '/../storage/framework/views';
+if (is_dir($compiled)) {
+    foreach (scandir($compiled) ?: [] as $entry) {
+        if (str_ends_with($entry, '.php') && ! file_exists('/tmp/storage/framework/views/' . $entry)) {
+            copy($compiled . '/' . $entry, '/tmp/storage/framework/views/' . $entry);
+        }
+    }
+}
+
+// Cache config & route dibuat saat build di bootstrap/cache, jadi path-nya
+// tidak dialihkan ke /tmp. Cache yang bisa ditulis saat runtime tetap /tmp.
 foreach ([
     'APP_PACKAGES_CACHE' => '/tmp/packages.php',
     'APP_SERVICES_CACHE' => '/tmp/services.php',
-    'APP_CONFIG_CACHE'   => '/tmp/config.php',
-    'APP_ROUTES_CACHE'   => '/tmp/routes.php',
     'APP_EVENTS_CACHE'   => '/tmp/events.php',
 ] as $key => $value) {
     putenv("$key=$value");

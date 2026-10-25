@@ -17,7 +17,6 @@
 /database/*.sqlite
 /database/*.sqlite3
 /database/*.db
-/public/build
 /public/hot
 /public/storage
 /public/uploads/*

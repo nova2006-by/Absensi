@@ -71,10 +71,14 @@ if (is_dir($compiled)) {
 
 // Cache config & route dibuat saat build di bootstrap/cache, jadi path-nya
 // tidak dialihkan ke /tmp. Cache yang bisa ditulis saat runtime tetap /tmp.
+// Config sengaja TIDAK di-cache saat build: config:cache membakar path absolut
+// folder build (/vercel/path0) yang tidak ada di runtime (/var/task/user).
 foreach ([
-    'APP_PACKAGES_CACHE' => '/tmp/packages.php',
-    'APP_SERVICES_CACHE' => '/tmp/services.php',
-    'APP_EVENTS_CACHE'   => '/tmp/events.php',
+    'APP_PACKAGES_CACHE'  => '/tmp/packages.php',
+    'APP_SERVICES_CACHE'  => '/tmp/services.php',
+    'APP_CONFIG_CACHE'    => '/tmp/config.php',
+    'APP_EVENTS_CACHE'    => '/tmp/events.php',
+    'VIEW_COMPILED_PATH'  => '/tmp/storage/framework/views',
 ] as $key => $value) {
     putenv("$key=$value");
     $_ENV[$key] = $value;

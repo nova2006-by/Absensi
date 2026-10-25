@@ -40,9 +40,11 @@ return [
 
         // Disk publik menulis langsung ke public/uploads sehingga file
         // tayang tanpa symlink (storage:link sering dimatikan di hosting gratis).
+        // Di Vercel filesystem bersifat read-only, jadi entrypoint api/index.php
+        // mengarahkan UPLOADS_ROOT ke /tmp/uploads (lihat catatan di sana).
         'public' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
+            'root' => env('UPLOADS_ROOT', public_path('uploads')),
             'url' => '/uploads',
             'visibility' => 'public',
             'throw' => false,

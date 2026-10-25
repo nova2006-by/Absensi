@@ -99,9 +99,11 @@ class KehadiranController extends Controller
 
                 // Pertahankan jam yang sudah tercatat (mis. absensi mandiri siswa);
                 // jam masuk hanya diisi otomatis bila tanggalnya hari ini.
-                $jamMasuk = $absensi->jam_masuk
+                // $absensi bisa null (siswa belum punya catatan hari itu),
+                // misalnya saat guru menandai di luar jam masuk/pulang.
+                $jamMasuk = $absensi?->jam_masuk
                     ?? ($hadir && $tanggal === $hariIni ? now()->format('H:i:s') : null);
-                $jamPulang = $hadir ? $absensi->jam_pulang : null;
+                $jamPulang = $hadir ? $absensi?->jam_pulang : null;
 
                 DB::table('absensi')->updateOrInsert(
                     ['siswa_id' => $siswaId, 'tanggal' => $tanggal],

@@ -1,5 +1,16 @@
 <?php
 
+// Foto bukti disimpan di /tmp karena filesystem Vercel read-only; tanpa ini
+// Storage::disk('public')->store() gagal membuat folder uploads dan aksi
+// tambah pelanggaran berujung 500. Catatan: /tmp bersifat sementara,
+// berkas hilang bila instance dingin (lihat README soal penyimpanan objek).
+if (! is_dir('/tmp/uploads')) {
+    mkdir('/tmp/uploads', 0777, true);
+}
+putenv('UPLOADS_ROOT=/tmp/uploads');
+$_ENV['UPLOADS_ROOT'] = '/tmp/uploads';
+$_SERVER['UPLOADS_ROOT'] = '/tmp/uploads';
+
 // Sajikan berkas statis dari /public lewat entrypoint ini.
 // Deployment yang datang dari GitHub tidak punya lapisan file statis di
 // Vercel, jadi CSS/JS/foto disajikan di sini (seperti Apache pada container
@@ -8,11 +19,34 @@ $uri = rawurldecode((string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_P
 
 if ($uri !== '' && ! str_ends_with(strtolower($uri), '.php')) {
     $public = realpath(__DIR__ . '/../public');
-    $file = $public === false ? false : realpath($public . $uri);
+    $kandidat = [];
 
-    if ($file !== false
-        && str_starts_with($file, $public . DIRECTORY_SEPARATOR)
-        && is_file($file)) {
+    if ($public !== false) {
+        $kandidat[] = [realpath($public . $uri), $public];
+    }
+
+    // Unggahan (mis. /uploads/pelanggaran/x.jpg) ada di UPLOADS_ROOT.
+    if (str_starts_with($uri, '/uploads/')) {
+        $uploadsRoot = realpath(getenv('UPLOADS_ROOT') ?: (__DIR__ . '/../public/uploads'));
+        if ($uploadsRoot !== false) {
+            $kandidat[] = [
+                realpath(rtrim($uploadsRoot, '/\\') . substr($uri, strlen('/uploads'))),
+                $uploadsRoot,
+            ];
+        }
+    }
+
+    $file = false;
+    foreach ($kandidat as [$cand, $candRoot]) {
+        if ($cand !== false
+            && is_file($cand)
+            && str_starts_with($cand, $candRoot . DIRECTORY_SEPARATOR)) {
+            $file = $cand;
+            break;
+        }
+    }
+
+    if ($file !== false) {
         $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
         $types = [
             'css' => 'text/css; charset=UTF-8',

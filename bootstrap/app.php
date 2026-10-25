@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => EnsureRole::class,
         ]);
+
+        // Berjalan di belakang reverse proxy Vercel, jadi header
+        // X-Forwarded-Proto/Host harus dipercaya agar URL memakai https.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

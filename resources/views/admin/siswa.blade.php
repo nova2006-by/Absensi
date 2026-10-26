@@ -62,7 +62,9 @@
     </div>
 
     <div class="grid gap-6 xl:grid-cols-3">
-        <div class="xl:col-span-2">
+        {{-- min-w-0: tanpa ini, lebar tabel memaksa grid melebar & halaman bisa
+             digeser ke samping di layar HP. --}}
+        <div class="min-w-0 xl:col-span-2">
             <div class="card overflow-hidden">
                 <div class="card-header">
                     <h2 class="card-title">Daftar Siswa</h2>
@@ -120,7 +122,7 @@
             </div>
         </div>
 
-        <div>
+        <div class="min-w-0">
             <div class="card p-6">
                 <h2 class="text-sm font-semibold tracking-wide text-slate-900" id="form-judul">➕ Tambah Siswa</h2>
                 <form method="POST" id="form-siswa" action="{{ route('admin.siswa.store') }}"

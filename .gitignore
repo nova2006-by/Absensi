@@ -17,6 +17,14 @@
 /database/*.sqlite
 /database/*.sqlite3
 /database/*.db
+/mobile/keys
+/mobile/node_modules
+/mobile/android
+/mobile/*.apk
+/mobile/*.aab
+*.keystore
+*.jks
+
 /public/hot
 /public/storage
 /public/uploads/*

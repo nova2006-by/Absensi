@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "id.sch.smknu.absensi",
+            "sha256_cert_fingerprints": [
+                "2F:E9:72:29:44:E3:B4:BD:45:3E:81:8A:4C:7E:F8:62:EA:B5:6B:5E:40:FE:57:35:FB:C9:F7:AD:7D:FC:5D:B2"
+            ]
+        }
+    }
+]

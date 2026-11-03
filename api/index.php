@@ -53,6 +53,7 @@ if ($uri !== '' && ! str_ends_with(strtolower($uri), '.php')) {
             'js' => 'text/javascript; charset=UTF-8',
             'mjs' => 'text/javascript; charset=UTF-8',
             'json' => 'application/json; charset=UTF-8',
+            'webmanifest' => 'application/manifest+json; charset=UTF-8',
             'map' => 'application/json; charset=UTF-8',
             'txt' => 'text/plain; charset=UTF-8',
             'html' => 'text/html; charset=UTF-8',
